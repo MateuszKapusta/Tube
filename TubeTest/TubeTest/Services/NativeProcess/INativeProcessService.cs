@@ -8,5 +8,7 @@ namespace TubeTest.Services.NativeProcess
 {
     public interface INativeProcessService
     {
+
+        Task StartProcess(Func<Task> action);
     }
 }

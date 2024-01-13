@@ -8,8 +8,9 @@ using YoutubeExplode;
 using System.Windows.Input;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
+using TubeTest.Services.NativeProcess;
 
-namespace TubeTest
+namespace TubeTest.ViewModel
 {
     public class MainViewModel : BindableObject
     {
@@ -48,10 +49,14 @@ namespace TubeTest
         }
 
         private readonly IPopupService popupService;
+        private readonly INativeProcessService nativeProcessService;
 
-        public MainViewModel(IPopupService popupService)
+        public MainViewModel(
+            IPopupService popupService
+            , INativeProcessService nativeProcessService)
         {
             this.popupService = popupService;
+            this.nativeProcessService = nativeProcessService;
         }
 
         private async Task PlayVideo()
@@ -64,15 +69,17 @@ namespace TubeTest
                     Application.Current.MainPage.ShowPopup(popup);
                 });
 
-                var youtube = new YoutubeClient();
+                await nativeProcessService.StartProcess(() => { return Task.CompletedTask; });
 
-                var videoUrl = adress.Contains(baseYouTubeUrl) || adress.Contains(baseYouTubeMobileUrl) ? adress : $"{baseYouTubeUrl}{adress}";
+                //var youtube = new YoutubeClient();
 
-                var streamManifest = await youtube.Videos.Streams.GetManifestAsync(videoUrl);
-                streamInfo = streamManifest.GetMuxedStreams();
+                //var videoUrl = adress.Contains(baseYouTubeUrl) || adress.Contains(baseYouTubeMobileUrl) ? adress : $"{baseYouTubeUrl}{adress}";
 
-                var vidoePlayerStream = streamInfo.First(video => video.VideoQuality.Label is "240p" or "360p" or "480p");
-                VTubeSource = vidoePlayerStream.Url;
+                //var streamManifest = await youtube.Videos.Streams.GetManifestAsync(videoUrl);
+                //streamInfo = streamManifest.GetMuxedStreams();
+
+                //var vidoePlayerStream = streamInfo.First(video => video.VideoQuality.Label is "240p" or "360p" or "480p");
+                //VTubeSource = vidoePlayerStream.Url;
             }
             catch (Exception ex)
             {

@@ -1,5 +1,6 @@
 ﻿using Android.App;
 using Android.Runtime;
+using TubeTest.Platforms.Android.Services;
 
 namespace TubeTest
 {
@@ -11,6 +12,6 @@ namespace TubeTest
         {
         }
 
-        protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
+        protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp(new DependencyModule());
     }
 }

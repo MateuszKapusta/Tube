@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TubeTest
+namespace TubeTest.ViewModel
 {
-    public class NativeProcessService : INativeProcessService
+    public class IndicatorViewModel : BindableObject
     {
     }
 }
