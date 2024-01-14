@@ -2,6 +2,8 @@
 using YoutubeExplode.Videos.Streams;
 using System.Linq;
 using TubeTest.ViewModel;
+using CommunityToolkit.Mvvm.Messaging;
+using TubeTest.Messages;
 
 namespace TubeTest
 {
@@ -13,6 +15,19 @@ namespace TubeTest
             InitializeComponent();
             BindingContext = bindingContext;
             DeviceDisplay.Current.MainDisplayInfoChanged += Current_MainDisplayInfoChanged;
+
+            // Register a message in some module
+            WeakReferenceMessenger.Default.Register<MediaPlayerMessage>(this, (r, m) =>
+            {
+                if (m.Value.Play)
+                {
+                    VideoPlayer.Play();
+                }
+                else
+                {
+                    VideoPlayer.Pause();
+                }
+            });
         }
 
         private void Current_MainDisplayInfoChanged(object? sender, DisplayInfoChangedEventArgs e)

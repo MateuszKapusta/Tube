@@ -4,14 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TubeTest.Services.NativeProcess;
+using static System.Collections.Specialized.BitVector32;
 
 namespace TubeTest.Platforms.Windows.Services
 {
     internal class NativeProcessService : INativeProcessService
     {
-        public async Task StartProcess(Func<Task> action)
+        public void StartProcess(Type processName, string action = null, object data = null)
         {
-            await action?.Invoke();
+            throw new NotImplementedException();
+        }
+
+        public void StopProcess(Type processName, string action = null)
+        {
+            throw new NotImplementedException();
         }
     }
 }

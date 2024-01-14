@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using TubeTest.Services;
 using TubeTest.Services.NativeProcess;
 
-namespace TubeTest.Platforms.Android.Services
+namespace TubeTest.Platforms.Droid.Services
 {
     internal class DependencyModule : IDependencyModule
     {

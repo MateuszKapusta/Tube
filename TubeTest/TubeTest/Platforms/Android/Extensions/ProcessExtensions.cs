@@ -7,13 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TubeTest.Platforms.Android
+namespace TubeTest.Platforms.Droid.Extensions
 {
     public static class ProcessExtensions
     {
-        public static void StartForegroundServiceCompat<T>(this Context context, Bundle args = null) where T : Service
+        public static void StartForegroundServiceCompat<T>(this Context context, string action = null, Bundle args = null) where T : Service
         {
             var intent = new Intent(context, typeof(T));
+            if (!string.IsNullOrEmpty(action))
+            {
+                intent.SetAction(action);
+            }
+
             if (args != null)
             {
                 intent.PutExtras(args);

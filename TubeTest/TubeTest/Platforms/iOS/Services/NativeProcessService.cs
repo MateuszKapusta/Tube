@@ -9,7 +9,12 @@ namespace TubeTest.Platforms.ios.Services
 {
     internal class NativeProcessService : INativeProcessService
     {
-        public Task StartProcess(Func<Task> action)
+        public void StartProcess(Type processName, string action = null, object data = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void StopProcess(Type processName, string action = null)
         {
             throw new NotImplementedException();
         }

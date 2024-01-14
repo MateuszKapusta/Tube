@@ -16,6 +16,10 @@ namespace TubeTest.ViewModel
     {
         public ICommand PlayCommand => new Command(async () => await Task.Run(PlayVideo));
 
+        public ICommand AppearingCommand => new Command(OnAppearing);
+
+        public ICommand DisappearingCommand => new Command(OnDisappearing);
+
         private IEnumerable<MuxedStreamInfo> streamInfo;
         private const string baseYouTubeUrl = "https://www.youtube.com/watch?v=";
         private const string baseYouTubeMobileUrl = "https://m.youtube.com/watch?v=";
@@ -69,17 +73,17 @@ namespace TubeTest.ViewModel
                     Application.Current.MainPage.ShowPopup(popup);
                 });
 
-                await nativeProcessService.StartProcess(() => { return Task.CompletedTask; });
+                var youtube = new YoutubeClient();
 
-                //var youtube = new YoutubeClient();
+                var videoUrl = adress.Contains(baseYouTubeUrl) || adress.Contains(baseYouTubeMobileUrl) ? adress : $"{baseYouTubeUrl}{adress}";
 
-                //var videoUrl = adress.Contains(baseYouTubeUrl) || adress.Contains(baseYouTubeMobileUrl) ? adress : $"{baseYouTubeUrl}{adress}";
+                var streamManifest = await youtube.Videos.Streams.GetManifestAsync(videoUrl);
+                streamInfo = streamManifest.GetMuxedStreams();
 
-                //var streamManifest = await youtube.Videos.Streams.GetManifestAsync(videoUrl);
-                //streamInfo = streamManifest.GetMuxedStreams();
+                var vidoePlayerStream = streamInfo.First(video => video.VideoQuality.Label is "240p" or "360p" or "480p");
+                VTubeSource = vidoePlayerStream.Url;
 
-                //var vidoePlayerStream = streamInfo.First(video => video.VideoQuality.Label is "240p" or "360p" or "480p");
-                //VTubeSource = vidoePlayerStream.Url;
+                nativeProcessService.StartProcess(typeof(MediaElement), Constants.ACTION_START_SERVICE);
             }
             catch (Exception ex)
             {
@@ -94,5 +98,15 @@ namespace TubeTest.ViewModel
             }
         }
 
+
+        private void OnDisappearing()
+        {
+            //nativeProcessService.StartProcess(typeof(MediaElement), Constants.ACTION_START_SERVICE);
+        }
+
+        private void OnAppearing()
+        {
+            //nativeProcessService.StopProcess(typeof(MediaElement), Constants.ACTION_STOP_SERVICE);
+        }
     }
 }
