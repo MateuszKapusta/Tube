@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TubeTest
+namespace TubeTest.Services
 {
-    public class IndicatorViewModel : BindableObject
+    public interface IDependencyModule
     {
+        IServiceCollection Register(IServiceCollection services);
     }
 }

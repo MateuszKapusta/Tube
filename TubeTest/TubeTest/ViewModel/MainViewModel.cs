@@ -8,12 +8,17 @@ using YoutubeExplode;
 using System.Windows.Input;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
+using TubeTest.Services.NativeProcess;
 
-namespace TubeTest
+namespace TubeTest.ViewModel
 {
     public class MainViewModel : BindableObject
     {
         public ICommand PlayCommand => new Command(async () => await Task.Run(PlayVideo));
+
+        public ICommand AppearingCommand => new Command(OnAppearing);
+
+        public ICommand DisappearingCommand => new Command(OnDisappearing);
 
         private IEnumerable<MuxedStreamInfo> streamInfo;
         private const string baseYouTubeUrl = "https://www.youtube.com/watch?v=";
@@ -48,10 +53,14 @@ namespace TubeTest
         }
 
         private readonly IPopupService popupService;
+        private readonly INativeProcessService nativeProcessService;
 
-        public MainViewModel(IPopupService popupService)
+        public MainViewModel(
+            IPopupService popupService
+            , INativeProcessService nativeProcessService)
         {
             this.popupService = popupService;
+            this.nativeProcessService = nativeProcessService;
         }
 
         private async Task PlayVideo()
@@ -73,6 +82,8 @@ namespace TubeTest
 
                 var vidoePlayerStream = streamInfo.First(video => video.VideoQuality.Label is "240p" or "360p" or "480p");
                 VTubeSource = vidoePlayerStream.Url;
+
+                nativeProcessService.StartProcess(typeof(MediaElement), Constants.ACTION_START_SERVICE);
             }
             catch (Exception ex)
             {
@@ -87,5 +98,15 @@ namespace TubeTest
             }
         }
 
+
+        private void OnDisappearing()
+        {
+            //nativeProcessService.StartProcess(typeof(MediaElement), Constants.ACTION_START_SERVICE);
+        }
+
+        private void OnAppearing()
+        {
+            //nativeProcessService.StopProcess(typeof(MediaElement), Constants.ACTION_STOP_SERVICE);
+        }
     }
 }

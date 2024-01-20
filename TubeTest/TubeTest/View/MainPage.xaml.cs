@@ -1,6 +1,9 @@
 ﻿using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
 using System.Linq;
+using TubeTest.ViewModel;
+using CommunityToolkit.Mvvm.Messaging;
+using TubeTest.Messages;
 
 namespace TubeTest
 {
@@ -12,6 +15,27 @@ namespace TubeTest
             InitializeComponent();
             BindingContext = bindingContext;
             DeviceDisplay.Current.MainDisplayInfoChanged += Current_MainDisplayInfoChanged;
+
+            // Register a message in some module
+            WeakReferenceMessenger.Default.Register<MediaPlayerMessage>(this, (r, m) =>
+            {
+                if (m.Value.Play.HasValue)
+                {
+                    if (m.Value.Play.Value)
+                    {
+                        VideoPlayer.Play();
+                    }
+                    else
+                    {
+                        VideoPlayer.Pause();
+                    }
+                }
+
+                if (m.Value.Reet)
+                {
+                    VideoPlayer.SeekTo(TimeSpan.FromSeconds(0));
+                }
+            });
         }
 
         private void Current_MainDisplayInfoChanged(object? sender, DisplayInfoChangedEventArgs e)
